@@ -10,11 +10,13 @@
   font-size: calc(12px + 0.2vw);
   font-family: "Roboto", sans-serif;
   --neutralDark: #0f172a;
-  --offWhite: #d4d4d4;
+  --offWhite: #f4f4f5;
   --blue: #0c4a6e;
   --lightBlue: #2563eb;
   --red: #881337;
   --gray: #6b7280;
+  --lightRed: #f87171;
+  --green: #16a34a;
 }
 
 .app-container {
@@ -49,6 +51,11 @@
 input[type="range"] {
   cursor: pointer;
 }
+/* Array Size nav item does nothing on hover */
+#arraySize-nav:hover {
+  color: var(--offWhite);
+  cursor: default;
+}
 
 .sort-interface {
   display: flex;
@@ -59,4 +66,10 @@ input[type="range"] {
 .bar {
   flex: 1;
   background-color: var(--lightBlue);
+}
+.bar.sorted {
+  background-color: var(--lightRed);
+}
+.bar.highlighted {
+  background-color: var(--green);
 }
