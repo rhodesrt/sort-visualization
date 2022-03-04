@@ -5,7 +5,7 @@ import { selectionSort } from "../sortAlgorithms/selection.js";
 const SortInterface = (props) => {
   const [arrayToSort, setArrayToSort] = useState(() => {
     let array = [];
-    for (let i = 0; i < 162; i++) {
+    for (let i = 0; i < 47; i++) {
       array[i] = {};
       array[i].height = Math.floor(Math.random() * 500 + 10);
       array[i].sorted = false;
@@ -34,6 +34,7 @@ const SortInterface = (props) => {
   }, [props.lengthOfArray]);
 
   useEffect(() => {
+    props.setConductSort(null);
     if (props.generateNewArray) {
       setArrayToSort(() => {
         let array = [];
@@ -49,78 +50,92 @@ const SortInterface = (props) => {
   }, [props.generateNewArray]);
 
   // Conduct Sorting algorithms
-  const [performAnotherIteration, setPerformAnotherIteration] = useState(0);
-  const firstUnsortedIndex = useRef(null);
-  const currentIteration = useRef(null);
+  const firstUnsorted = useRef(null);
+  const currentI = useRef(null);
   const shortest = useRef({
     height: null,
-    index: null,
+    i: null,
   });
   useEffect(() => {
-    // If all elements sorted, end sorting process
-    if (arrayToSort[arrayToSort.length - 1].sorted === true) {
-      props.setConductSort(null);
+    if (props.conductSort === null) {
+      return;
     } else if (props.conductSort === "Selection Sort") {
-      if (firstUnsortedIndex.current === null) {
+      // if first unsorted index is null, get first unsorted index
+      if (firstUnsorted.current === null) {
         for (let i = 0; i < arrayToSort.length; i++) {
           if (arrayToSort[i].sorted === false) {
-            firstUnsortedIndex.current = i;
+            firstUnsorted.current = i;
             break;
           }
         }
       }
-
-      setTimeout(() => {
-        setArrayToSort(() => {
-          if (currentIteration.current === null) {
-            currentIteration.current = firstUnsortedIndex.current;
-          } else {
-            Array.from(document.querySelectorAll(".bar"))[
-              currentIteration.current - 1
-            ].classList.remove("highlighted");
+      currentI.current = firstUnsorted.current;
+      let domArrayToSort = Array.from(document.querySelectorAll(".bar"));
+      iterate(domArrayToSort);
+      function iterate(domArray) {
+        setTimeout(() => {
+          // if previous element exists, remove its highlight
+          let previousElement = domArray[currentI.current - 1];
+          if (previousElement) {
+            previousElement.classList.remove("highlighted");
           }
-          Array.from(document.querySelectorAll(".bar"))[
-            currentIteration.current
-          ].classList.add("highlighted");
-          if (shortest.current.height === null) {
-            shortest.current.height =
-              arrayToSort[currentIteration.current].height;
-            shortest.current.index = currentIteration.current;
-          } else if (
-            arrayToSort[currentIteration.current].height <=
-            shortest.current.height
-          ) {
-            shortest.current.height =
-              arrayToSort[currentIteration.current].height;
-            shortest.current.index = currentIteration.current;
+          // if current element exists, add its highlight
+          let currentElement = domArray[currentI.current];
+          if (currentElement) {
+            currentElement.classList.add("highlighted");
           }
-          if (currentIteration.current === arrayToSort.length - 1) {
-            Array.from(document.querySelectorAll(".bar"))[
-              currentIteration.current
-            ].classList.remove("highlighted");
-            let tempContainer = {
-              height: arrayToSort[firstUnsortedIndex.current].height,
-              sorted: arrayToSort[firstUnsortedIndex.current].sorted,
+          // if shortest is null, shortest = array[currentI]
+          if (shortest.current.height === null || shortest.current.i === null) {
+            shortest.current = {
+              height: arrayToSort[currentI.current].height,
+              i: currentI.current,
             };
-            arrayToSort[firstUnsortedIndex.current].height =
-              shortest.current.height;
-            arrayToSort[firstUnsortedIndex.current].sorted = true;
-            arrayToSort[shortest.current.index].height = tempContainer.height;
-            if (firstUnsortedIndex.current < arrayToSort.length) {
-              firstUnsortedIndex.current++;
-            }
-            currentIteration.current = null;
-            shortest.current.height = null;
-            shortest.current.index = null;
-          } else {
-            currentIteration.current++;
-            setPerformAnotherIteration(performAnotherIteration + 1);
           }
-          return arrayToSort;
-        });
-      }, 20);
+          // if array[currentI] is shorter than shortest, record
+          if (arrayToSort[currentI.current].height <= shortest.current.height) {
+            shortest.current = {
+              height: arrayToSort[currentI.current].height,
+              i: currentI.current,
+            };
+          }
+          // if end of array
+          if (currentI.current === arrayToSort.length - 1) {
+            // remove its highlight
+            currentElement.classList.remove("highlighted");
+            //  modify copy of arrayToSort
+            let arrayCopy = [];
+            for (let i = 0; i < arrayToSort.length; i++) {
+              arrayCopy[i] = arrayToSort[i];
+            }
+            let tempStorageOfHeight = arrayCopy[firstUnsorted.current].height;
+            arrayCopy[firstUnsorted.current] = {
+              height: shortest.current.height,
+              sorted: true,
+            };
+            arrayCopy[shortest.current.i].height = tempStorageOfHeight;
+            //  if all are iterated through
+            if (firstUnsorted.current === arrayToSort.length - 1) {
+              firstUnsorted.current = null;
+              props.setConductSort(null);
+            } else {
+              firstUnsorted.current = firstUnsorted.current + 1;
+            }
+            shortest.current = {
+              height: null,
+              i: null,
+            };
+            currentI.current = null;
+            setArrayToSort(arrayCopy);
+            return;
+          } else {
+            currentI.current = currentI.current + 1;
+            iterate(domArray);
+            return;
+          }
+        }, 10);
+      }
     }
-  }, [performAnotherIteration, arrayToSort, props.conductSort]);
+  }, [arrayToSort, props.conductSort]);
 
   return (
     <div className="sort-interface">

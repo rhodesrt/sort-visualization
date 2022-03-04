@@ -19,6 +19,11 @@
   --green: #16a34a;
 }
 
+.unclickable {
+  pointer-events: none;
+  opacity: 0.4;
+}
+
 .app-container {
   display: flex;
   flex-direction: column;

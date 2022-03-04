@@ -3,27 +3,55 @@ import { useState, useEffect, useRef } from "react";
 
 const Nav = (props) => {
   const toggleGenerateNewArray = () => {
+    let selectableElements = Array.from(
+      document.querySelectorAll(".selectable")
+    );
+    selectableElements.forEach((element) => {
+      element.classList.remove("unclickable");
+    });
     props.setGenerateNewArray(true);
   };
 
   const handleSortSelection = (e) => {
+    let selectableElements = Array.from(
+      document.querySelectorAll(".selectable")
+    );
+    selectableElements.forEach((element) => {
+      if (element.textContent === "Generate New Array") {
+        return;
+      } else {
+        element.classList.add("unclickable");
+      }
+    });
     props.setConductSort(e.target.textContent);
   };
 
   return (
     <nav className="nav-container">
       <div>
-        <h2 onClick={toggleGenerateNewArray}>Generate New Array</h2>
+        <h2 className="selectable" onClick={toggleGenerateNewArray}>
+          Generate New Array
+        </h2>
       </div>
       <div>
-        <h2 id="arraySize-nav">Array Size</h2>
+        <h2 className="selectable" id="arraySize-nav">
+          Array Size
+        </h2>
         <Slider setLengthOfArray={props.setLengthOfArray} />
       </div>
       <div>
-        <h2 onClick={handleSortSelection}>Selection Sort</h2>
-        <h2 onClick={handleSortSelection}>Bubble Sort</h2>
-        <h2 onClick={handleSortSelection}>Merge Sort</h2>
-        <h2 onClick={handleSortSelection}>Quick Sort</h2>
+        <h2 className="selectable" onClick={handleSortSelection}>
+          Selection Sort
+        </h2>
+        <h2 className="unclickable" onClick={handleSortSelection}>
+          Bubble Sort
+        </h2>
+        <h2 className="unclickable" onClick={handleSortSelection}>
+          Merge Sort
+        </h2>
+        <h2 className="unclickable" onClick={handleSortSelection}>
+          Quick Sort
+        </h2>
       </div>
     </nav>
   );
@@ -32,7 +60,7 @@ const Nav = (props) => {
 export default Nav;
 
 const Slider = (props) => {
-  const sliderValue = useRef(Math.floor((300 - 25) / 2 + 25));
+  const sliderValue = useRef(Math.floor((70 - 25) / 2 + 25));
   const handleSliderChange = (e) => {
     sliderValue.current = e.target.value;
     props.setLengthOfArray(parseInt(e.target.value));
@@ -45,14 +73,15 @@ const Slider = (props) => {
   }, []);
 
   return (
-    <div>
+    <div id="slider" className="selectable">
       <input
         type="range"
         min="25"
-        max="300"
+        max="70"
         value={sliderValue.current}
         id="numberOfElements"
         onInput={handleSliderChange}
+        onClick={handleSliderChange}
       />
     </div>
   );
