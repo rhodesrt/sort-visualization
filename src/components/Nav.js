@@ -17,11 +17,7 @@ const Nav = (props) => {
       document.querySelectorAll(".selectable")
     );
     selectableElements.forEach((element) => {
-      if (element.textContent === "Generate New Array") {
-        return;
-      } else {
-        element.classList.add("unclickable");
-      }
+      element.classList.add("unclickable");
     });
     props.setConductSort(e.target.textContent);
   };

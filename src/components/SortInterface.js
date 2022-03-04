@@ -33,6 +33,7 @@ const SortInterface = (props) => {
     });
   }, [props.lengthOfArray]);
 
+  // Generate new array
   useEffect(() => {
     props.setConductSort(null);
     if (props.generateNewArray) {
@@ -115,6 +116,13 @@ const SortInterface = (props) => {
             arrayCopy[shortest.current.i].height = tempStorageOfHeight;
             //  if all are iterated through
             if (firstUnsorted.current === arrayToSort.length - 1) {
+              Array.from(document.querySelectorAll(".selectable")).forEach(
+                (element) => {
+                  if (element.textContent === "Generate New Array") {
+                    element.classList.remove("unclickable");
+                  }
+                }
+              );
               firstUnsorted.current = null;
               props.setConductSort(null);
             } else {
