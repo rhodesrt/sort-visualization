@@ -63,10 +63,8 @@ const SortInterface = (props) => {
   });
   useEffect(() => {
     if (props.conductSort === null) {
-      console.log(`conductSort is null`);
       return;
     } else if (props.conductSort === "Selection Sort") {
-      console.log(`conduct sort is selection`);
       let i = currentI.current;
       // if first unsorted index is null, get first unsorted index
       if (firstUnsorted.current === null) {
@@ -147,10 +145,9 @@ const SortInterface = (props) => {
             iterate(domArray);
             return;
           }
-        }, 10);
+        }, 15);
       }
     } else if (props.conductSort === "Bubble Sort") {
-      console.log("conduct sort is bubble sort");
       setTimeout(() => {
         if (arrayCopy.current === null) {
           arrayCopy.current = [];
@@ -168,7 +165,6 @@ const SortInterface = (props) => {
               break;
             }
           }
-          console.log(`Last Unsorted: ${lastUnsorted.current}`);
         }
         if (firstUnsorted.current === null) {
           for (let i = 0; i < props.lengthOfArray; i++) {
@@ -220,7 +216,7 @@ const SortInterface = (props) => {
             if (domArray[currentIteration + 1]) {
               domArray[currentIteration + 1].classList.remove("highlighted");
             }
-          }, 20);
+          }, 15);
         }
         function resetRefs() {
           currentI.current = null;
@@ -236,6 +232,15 @@ const SortInterface = (props) => {
           }
         }
         if (allSorted === true) {
+          arrayCopy.current = null;
+          sortedArray.current = null;
+          Array.from(document.querySelectorAll(".selectable")).forEach(
+            (element) => {
+              if (element.textContent === "Generate New Array") {
+                element.classList.remove("unclickable");
+              }
+            }
+          );
           props.setConductSort(null);
         } else {
           handleHighlights(i);
@@ -249,6 +254,10 @@ const SortInterface = (props) => {
               resetRefs();
               setIterateAgain(iterateAgain + 1);
             }
+          } else if (firstUnsorted.current === lastUnsorted.current) {
+            arrayCopy.current[i].sorted = true;
+            resetRefs();
+            setArrayToSort(arrayCopy.current);
           } else {
             if (arrayToSort[i].height >= arrayToSort[i + 1].height) {
               switchElements(i);
@@ -261,7 +270,7 @@ const SortInterface = (props) => {
             }
           }
         }
-      }, 20);
+      }, 15);
     }
   }, [arrayToSort, props.conductSort, iterateAgain]);
 
