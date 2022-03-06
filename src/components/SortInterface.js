@@ -185,7 +185,7 @@ const SortInterface = (props) => {
           sortedArray.current = arrayCopy.current.map(
             (element) => element.height
           );
-          sortedArray.current.sort();
+          sortedArray.current.sort((a, b) => a - b);
         }
         function switchElements(currentIteration) {
           let bigger = arrayCopy.current[currentIteration].height;
@@ -193,16 +193,20 @@ const SortInterface = (props) => {
             arrayCopy.current[currentIteration + 1].height;
           arrayCopy.current[currentIteration + 1].height = bigger;
           if (
-            sortedArray.current[currentIteration].height ===
+            sortedArray.current[currentIteration] ===
             arrayCopy.current[currentIteration].height
           ) {
             arrayCopy.current[currentIteration].sorted = true;
+          } else {
+            arrayCopy.current[currentIteration].sorted = false;
           }
           if (
-            sortedArray.current[currentIteration + 1].height ===
+            sortedArray.current[currentIteration + 1] ===
             arrayCopy.current[currentIteration + 1].height
           ) {
             arrayCopy.current[currentIteration + 1].sorted = true;
+          } else {
+            arrayCopy.current[currentIteration + 1].sorted = false;
           }
         }
         function handleHighlights(currentIteration) {
@@ -216,7 +220,7 @@ const SortInterface = (props) => {
             if (domArray[currentIteration + 1]) {
               domArray[currentIteration + 1].classList.remove("highlighted");
             }
-          }, 40);
+          }, 20);
         }
         function resetRefs() {
           currentI.current = null;
@@ -257,7 +261,7 @@ const SortInterface = (props) => {
             }
           }
         }
-      }, 40);
+      }, 20);
     }
   }, [arrayToSort, props.conductSort, iterateAgain]);
 
