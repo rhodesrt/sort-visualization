@@ -168,6 +168,7 @@ const SortInterface = (props) => {
               break;
             }
           }
+          console.log(`Last Unsorted: ${lastUnsorted.current}`);
         }
         if (firstUnsorted.current === null) {
           for (let i = 0; i < props.lengthOfArray; i++) {
@@ -236,24 +237,22 @@ const SortInterface = (props) => {
           handleHighlights(i);
           if (i === lastUnsorted.current - 1) {
             if (arrayToSort[i].height >= arrayToSort[i + 1].height) {
-              console.log(`switch: ${i}`);
               switchElements(i);
               resetRefs();
               setArrayToSort(arrayCopy.current);
+              setIterateAgain(iterateAgain + 1);
             } else {
-              console.log(`no switch: ${i}`);
               resetRefs();
               setIterateAgain(iterateAgain + 1);
             }
           } else {
             if (arrayToSort[i].height >= arrayToSort[i + 1].height) {
-              console.log(`switch: ${i}`);
               switchElements(i);
-              currentI.current = i + 1;
+              currentI.current = currentI.current + 1;
               setArrayToSort(arrayCopy.current);
+              setIterateAgain(iterateAgain + 1);
             } else {
-              console.log(`no switch: ${i}`);
-              currentI.current = i + 1;
+              currentI.current = currentI.current + 1;
               setIterateAgain(iterateAgain + 1);
             }
           }
