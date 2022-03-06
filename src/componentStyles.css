@@ -47,29 +47,52 @@
   .nav-container {
     gap: 4rem;
   }
+  input[type="range"] {
+    width: 120px;
+    height: 7px;
+  }
 }
-@media (max-width: 692px) {
+@media (max-width: 684px) {
   :root {
     font-size: 8px;
   }
   .nav-container {
     gap: 3rem;
   }
+  input[type="range"] {
+    width: 100px;
+    height: 6px;
+  }
 }
-@media (max-width: 570px) {
+@media (max-width: 540px) {
   :root {
     font-size: 6px;
   }
   .nav-container {
-    gap: 2.5rem;
+    gap: 2rem;
+  }
+  input[type="range"] {
+    width: 80px;
   }
 }
-@media (max-width: 463px) {
+@media (max-width: 406px) {
   :root {
     font-size: 5px;
   }
   .nav-container {
-    gap: 2rem;
+    gap: 1.5rem;
+  }
+  input[type="range"] {
+    width: 60px;
+    height: 5px;
+  }
+}
+@media (max-width: 332px) {
+  .nav-container {
+    gap: 0.1rem;
+  }
+  input[type="range"] {
+    width: 50px;
   }
 }
 .nav-container > div {
