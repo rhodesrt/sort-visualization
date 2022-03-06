@@ -40,6 +40,38 @@
   font-weight: bold;
   text-align: center;
 }
+@media (max-width: 913px) {
+  :root {
+    font-size: 10px;
+  }
+  .nav-container {
+    gap: 4rem;
+  }
+}
+@media (max-width: 692px) {
+  :root {
+    font-size: 8px;
+  }
+  .nav-container {
+    gap: 3rem;
+  }
+}
+@media (max-width: 570px) {
+  :root {
+    font-size: 6px;
+  }
+  .nav-container {
+    gap: 2.5rem;
+  }
+}
+@media (max-width: 463px) {
+  :root {
+    font-size: 5px;
+  }
+  .nav-container {
+    gap: 2rem;
+  }
+}
 .nav-container > div {
   display: flex;
   align-items: center;
