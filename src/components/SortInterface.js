@@ -52,6 +52,10 @@ const SortInterface = (props) => {
 
   // Conduct Sorting algorithms
   const firstUnsorted = useRef(null);
+  const lastUnsorted = useRef(null);
+  const arrayCopy = useRef(null);
+  const [iterateAgain, setIterateAgain] = useState(0);
+  const sortedArray = useRef(null);
   const currentI = useRef(null);
   const shortest = useRef({
     height: null,
@@ -59,8 +63,11 @@ const SortInterface = (props) => {
   });
   useEffect(() => {
     if (props.conductSort === null) {
+      console.log(`conductSort is null`);
       return;
     } else if (props.conductSort === "Selection Sort") {
+      console.log(`conduct sort is selection`);
+      let i = currentI.current;
       // if first unsorted index is null, get first unsorted index
       if (firstUnsorted.current === null) {
         for (let i = 0; i < arrayToSort.length; i++) {
@@ -142,8 +149,118 @@ const SortInterface = (props) => {
           }
         }, 10);
       }
+    } else if (props.conductSort === "Bubble Sort") {
+      console.log("conduct sort is bubble sort");
+      setTimeout(() => {
+        if (arrayCopy.current === null) {
+          arrayCopy.current = [];
+          for (let i = 0; i < props.lengthOfArray; i++) {
+            arrayCopy.current[i] = {
+              height: arrayToSort[i].height,
+              sorted: false,
+            };
+          }
+        }
+        if (lastUnsorted.current === null) {
+          for (let i = props.lengthOfArray - 1; i > 0; i--) {
+            if (arrayCopy.current[i].sorted === false) {
+              lastUnsorted.current = i;
+              break;
+            }
+          }
+        }
+        if (firstUnsorted.current === null) {
+          for (let i = 0; i < props.lengthOfArray; i++) {
+            if (arrayCopy.current[i].sorted === false) {
+              firstUnsorted.current = i;
+              break;
+            }
+          }
+        }
+        if (currentI.current === null) {
+          currentI.current = firstUnsorted.current;
+        }
+        if (sortedArray.current === null) {
+          sortedArray.current = arrayCopy.current.map(
+            (element) => element.height
+          );
+          sortedArray.current.sort();
+        }
+        function switchElements(currentIteration) {
+          let bigger = arrayCopy.current[currentIteration].height;
+          arrayCopy.current[currentIteration].height =
+            arrayCopy.current[currentIteration + 1].height;
+          arrayCopy.current[currentIteration + 1].height = bigger;
+          if (
+            sortedArray.current[currentIteration].height ===
+            arrayCopy.current[currentIteration].height
+          ) {
+            arrayCopy.current[currentIteration].sorted = true;
+          }
+          if (
+            sortedArray.current[currentIteration + 1].height ===
+            arrayCopy.current[currentIteration + 1].height
+          ) {
+            arrayCopy.current[currentIteration + 1].sorted = true;
+          }
+        }
+        function handleHighlights(currentIteration) {
+          let domArray = Array.from(document.querySelectorAll(".bar"));
+          domArray[currentIteration].classList.add("highlighted");
+          if (domArray[currentIteration + 1]) {
+            domArray[currentIteration + 1].classList.add("highlighted");
+          }
+          setTimeout(() => {
+            domArray[currentIteration].classList.remove("highlighted");
+            if (domArray[currentIteration + 1]) {
+              domArray[currentIteration + 1].classList.remove("highlighted");
+            }
+          }, 40);
+        }
+        function resetRefs() {
+          currentI.current = null;
+          lastUnsorted.current = null;
+          firstUnsorted.current = null;
+        }
+        let i = currentI.current;
+        let allSorted = true;
+        for (let y = 0; y < props.lengthOfArray; y++) {
+          if (arrayToSort[y].sorted === false) {
+            allSorted = false;
+            break;
+          }
+        }
+        if (allSorted === true) {
+          props.setConductSort(null);
+        } else {
+          handleHighlights(i);
+          if (i === lastUnsorted.current - 1) {
+            if (arrayToSort[i].height >= arrayToSort[i + 1].height) {
+              console.log(`switch: ${i}`);
+              switchElements(i);
+              resetRefs();
+              setArrayToSort(arrayCopy.current);
+            } else {
+              console.log(`no switch: ${i}`);
+              resetRefs();
+              setIterateAgain(iterateAgain + 1);
+            }
+          } else {
+            if (arrayToSort[i].height >= arrayToSort[i + 1].height) {
+              console.log(`switch: ${i}`);
+              switchElements(i);
+              currentI.current = i + 1;
+              setArrayToSort(arrayCopy.current);
+            } else {
+              console.log(`no switch: ${i}`);
+              currentI.current = i + 1;
+              setIterateAgain(iterateAgain + 1);
+            }
+          }
+        }
+      }, 40);
     }
-  }, [arrayToSort, props.conductSort]);
+  }, [arrayToSort, props.conductSort, iterateAgain]);
 
   return (
     <div className="sort-interface">
