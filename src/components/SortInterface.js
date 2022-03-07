@@ -317,7 +317,7 @@ const SortInterface = (props) => {
 
           leftHalf = mergeSort(leftHalf);
           rightHalf = mergeSort(rightHalf);
-          // return merge(leftHalf, rightHalf);
+          return merge(leftHalf, rightHalf);
         }, (array.length / 2) * 15);
       }
 
