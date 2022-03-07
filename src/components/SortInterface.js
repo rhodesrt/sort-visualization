@@ -274,6 +274,81 @@ const SortInterface = (props) => {
     }
   }, [arrayToSort, props.conductSort, iterateAgain]);
 
+  // Merge Sort
+  useEffect(() => {
+    if (props.conductSort === "Merge Sort") {
+      mergeSort(arrayToSort);
+      let domArray = Array.from(document.querySelectorAll(".bar"));
+      function handleHighlights(current, low, high) {
+        domArray[low + current].classList.add("highlighted");
+        setTimeout(() => {
+          domArray[low + current].classList.remove("highlighted");
+        }, (high - current) * 15);
+      }
+
+      function mergeSort(array) {
+        setTimeout(() => {
+          if (array.length === 1) {
+            return array;
+          }
+
+          function copyArrayElements(low, high, current, arrayOne, arrayTwo) {
+            setTimeout(() => {
+              if (current + low === high) {
+                return arrayOne;
+              } else {
+                arrayOne[current] = arrayTwo[current + low];
+                handleHighlights(current, low, high);
+                current++;
+                copyArrayElements(low, high, current, arrayOne, arrayTwo);
+              }
+            }, 15);
+          }
+          let leftHalf = [];
+          let rightHalf = [];
+          leftHalf = copyArrayElements(0, array.length / 2, 0, leftHalf, array);
+          rightHalf = copyArrayElements(
+            array.length / 2 + 1,
+            array.length,
+            0,
+            rightHalf,
+            array
+          );
+
+          leftHalf = mergeSort(leftHalf);
+          rightHalf = mergeSort(rightHalf);
+          // return merge(leftHalf, rightHalf);
+        }, (array.length / 2) * 15);
+      }
+
+      function merge(leftArray, rightArray) {
+        let fullArray = [];
+
+        while (leftArray[0] && rightArray[0]) {
+          if (leftArray[0] < rightArray[0]) {
+            fullArray.push(leftArray[0]);
+            leftArray.shift();
+          } else {
+            fullArray.push(rightArray[0]);
+            rightArray.shift();
+          }
+        }
+
+        while (leftArray[0]) {
+          fullArray.push(leftArray[0]);
+          leftArray.shift();
+        }
+        while (rightArray[0]) {
+          fullArray.push(rightArray[0]);
+          rightArray.shift();
+        }
+
+        return fullArray;
+      }
+      props.setConductSort(null);
+    }
+  }, [props.conductSort]);
+
   return (
     <div className="sort-interface">
       {arrayToSort.map((bar, index, array) => {
