@@ -306,9 +306,15 @@ const SortInterface = (props) => {
           }
           let leftHalf = [];
           let rightHalf = [];
-          leftHalf = copyArrayElements(0, array.length / 2, 0, leftHalf, array);
+          leftHalf = copyArrayElements(
+            0,
+            Math.floor(array.length / 2),
+            0,
+            leftHalf,
+            array
+          );
           rightHalf = copyArrayElements(
-            array.length / 2 + 1,
+            Math.floor(array.length / 2 + 1),
             array.length,
             0,
             rightHalf,
