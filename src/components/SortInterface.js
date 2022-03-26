@@ -324,7 +324,7 @@ const SortInterface = (props) => {
               );
               props.setConductSort(null);
             }
-          }, 40 * i);
+          }, 30 * i);
         }
       }
 
