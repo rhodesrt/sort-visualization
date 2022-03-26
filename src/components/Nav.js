@@ -42,7 +42,7 @@ const Nav = (props) => {
         <h2 className="selectable" onClick={handleSortSelection}>
           Bubble Sort
         </h2>
-        <h2 className="unclickable" onClick={handleSortSelection}>
+        <h2 className="selectable" onClick={handleSortSelection}>
           Merge Sort
         </h2>
         <h2 className="unclickable" onClick={handleSortSelection}>
