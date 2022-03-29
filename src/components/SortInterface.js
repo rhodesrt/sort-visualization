@@ -308,6 +308,7 @@ const SortInterface = (props) => {
       let domArray = Array.from(document.querySelectorAll(".bar"));
       // Could create an array of state changes and iterate over them
       mergeSort(mergeCopy.current);
+      console.log(arrayMorphs.current);
       iterateOverMorphs(arrayMorphs.current);
 
       function iterateOverMorphs(morphArray) {
@@ -461,6 +462,110 @@ const SortInterface = (props) => {
 
           return newArray;
         }
+      }
+    }
+  }, [props.conductSort]);
+
+  const quickSorted = useRef(null);
+  const quickCopy = useRef(null);
+  const quickMorphs = useRef(null);
+
+  useEffect(() => {
+    if (props.conductSort === null) {
+      quickSorted.current = null;
+      quickCopy.current = null;
+      quickMorphs.current = null;
+    } else if (props.conductSort === "Quick Sort") {
+      if (quickSorted.current === null) {
+        quickSorted.current = [];
+        for (let i = 0; i < arrayToSort.length; i++) {
+          quickSorted.current[i] = arrayToSort[i].height;
+        }
+        quickSorted.current.sort((a, b) => a - b);
+      }
+      if (quickCopy.current === null) {
+        quickCopy.current = [];
+        for (let i = 0; i < arrayToSort.length; i++) {
+          quickCopy.current[i] = {
+            height: arrayToSort[i].height,
+            sorted: false,
+            index: i,
+          };
+        }
+      }
+      if (quickMorphs.current === null) {
+        quickMorphs.current = [];
+      }
+
+      quickSort(quickCopy.current, 0, quickCopy.current.length - 1);
+      iterateOverMorphs(quickMorphs.current);
+
+      function iterateOverMorphs(morphArray) {
+        for (let i = 0; i < morphArray.length; i++) {
+          setTimeout(() => {
+            setArrayToSort(morphArray[i]);
+            if (i === morphArray.length - 1) {
+              Array.from(document.querySelectorAll(".selectable")).forEach(
+                (element) => {
+                  if (element.textContent === "Generate New Array") {
+                    element.classList.remove("unclickable");
+                  }
+                }
+              );
+              props.setConductSort(null);
+            }
+          }, 70 * i);
+        }
+      }
+
+      function quickSort(array, left, right) {
+        let index = partition(array, left, right);
+
+        if (left < index - 1) {
+          quickSort(array, left, index - 1);
+        }
+        if (index < right) {
+          quickSort(array, index, right);
+        }
+      }
+
+      function partition(array, left, right) {
+        let pivot = array[Math.floor(left + (right - left) / 2)].height;
+        while (left <= right) {
+          while (array[left].height < pivot) {
+            left++;
+          }
+          while (array[right].height > pivot) {
+            right--;
+          }
+
+          if (left <= right) {
+            let tempStorage = array[left];
+            array[left] = array[right];
+            array[right] = tempStorage;
+
+            for (let i = 0; i < array.length; i++) {
+              if (array[i].height === quickSorted.current[i]) {
+                array[i].sorted = true;
+              } else {
+                array[i].sorted = false;
+              }
+            }
+
+            let newArray = [];
+            for (let i = 0; i < quickCopy.current.length; i++) {
+              newArray[i] = {
+                height: quickCopy.current[i].height,
+                sorted: quickCopy.current[i].sorted,
+              };
+            }
+            quickMorphs.current.push(newArray);
+
+            left++;
+            right--;
+          }
+        }
+        return left;
       }
     }
   }, [props.conductSort]);
